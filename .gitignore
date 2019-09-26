@@ -1,1 +1,4 @@
 node_modules
+testdata/outimg
+testdata/smallimg
+testdata/medimg
