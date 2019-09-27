@@ -6,6 +6,7 @@ const path = require('path');
 const galleryFunctions = require('./util/galleryFunctions');
 
 app.locals.config = {
+	siteName:'Test Gallery',
 	galleryDescriptionsDir: 'testdata/galleries',
 	galleryItemsDir: 'testdata/galleryItems',
 	galleryImageDir: 'testdata/images',
@@ -17,12 +18,19 @@ app.locals.config = {
 			options:{}
 		},
 		{
+			prefix:'/med',
+			source:'testdata/medimg',
+		},
+		{
 			prefix:'/full',
 			source:'testdata/outimg',
 		}
-	]
+	],
+	templateDir:'testdata/template',
+	menuHtml:'testdata/menu.html'
 };
 
+app.locals.menuHtml = {}
 app.locals.galleries = {}
 
 
@@ -52,6 +60,13 @@ async function modifyimages(jsfile, imgdir, imgpath) {
 
 modifyimages(app.locals.config.galleryImageJsFunctions, app.locals.config.galleryImageDir, '');
 console.log('hi');
+
+
+app.set('views',path.join(app.locals.config.templateDir,'views'));
+app.set('view engine','ejs');
+app.use('/template/public',express.static(path.join(app.locals.config.templateDir,'public')));
+
+
 const galleryRouter = require('./routes/gallery');
 app.get('/', async (req, res) => {
 	res.send('HOME');
@@ -70,5 +85,6 @@ for(let i of app.locals.config.imageMountPaths){
 
 app.listen(3000, async () => {
 	app.locals.galleries = await galleryFunctions.getGalleries(app.locals.config);
+	app.locals.menuHtml=await fsPromises.readFile(app.locals.config.menuHtml);
 	console.log('TEST');
 })

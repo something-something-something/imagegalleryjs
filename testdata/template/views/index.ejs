@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/template/public/css.css">
+		<title>	<%= config.siteName %> &bullet; <%= pageName %></title>
+	</head>
+	<body>
+		<header>
+		<%= config.siteName %> <div><%- menu %></div>
+		</header>
+		<main>
+			
+			<% if(type==='galleryItem'){ %>
+				<%	if(imgNav.hasOwnProperty('previousImg')){ %>
+						<a href="/gallery/<%= galleryId+'/'+imgNav.previousImg %>">Back</a>
+					<% } %>
+					<% if(imgNav.hasOwnProperty('nextImg')){ %>
+						<a href="/gallery/<%= galleryId+'/'+imgNav.nextImg %>">Next</a>
+					<% } %>
+				<div><a href="/full/<%= data.image %>" target="_blank"><img src="/med/<%= data.image %>""></a></div>
+			<% } %>
+			
+			<%= content %>
+			<% if(type==='gallery'){ %>
+				<div>
+				<%
+				for(let i of data.order){
+					let obj=data.items[i]
+				%>
+					<a href="/gallery/<%= galleryId +'/'+i %>"><img class="galleryImages" src="/thumb/<%= obj.image %>"></a>
+				<% } %>
+				</div>
+			<% } %>
+
+
+			
+		</main>
+		<footer></footer>
+
+	</body>
+</html>

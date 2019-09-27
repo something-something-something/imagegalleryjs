@@ -1,3 +1,4 @@
-image: blah/nested/nested2/testimg.jpg
+name: two
+image: nested/nested2/testimg.jpg
 desc: this is a image
   hi
