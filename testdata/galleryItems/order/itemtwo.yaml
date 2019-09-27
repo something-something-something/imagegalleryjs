@@ -1,4 +1,5 @@
 name: two
+priority: 90000000
 image: nested/nested2/testimg.jpg
 desc: this is a image
   hi
