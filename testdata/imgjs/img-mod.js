@@ -73,7 +73,7 @@ async function writeCanvas(targetdir,imgpath,imgcanvas){
 	let imgStream;
 	if(path.extname(imgpath).toLowerCase()==='.jpg'||path.extname(imgpath).toLowerCase()==='.jpeg'){
 		console.log('jpg');
-		imgStream=imgcanvas.createJPEGStream();
+		imgStream=imgcanvas.createJPEGStream({quality:1});
 	}
 	else if(path.extname(imgpath).toLowerCase()==='.png'){
 		console.log('png');
