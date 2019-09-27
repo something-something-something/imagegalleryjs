@@ -2,26 +2,26 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<link rel="stylesheet" href="/template/public/css.css">
+		<link rel="stylesheet" href="/template/public/css/css.css">
 		<title>	<%= config.siteName %> &bullet; <%= pageName %></title>
 	</head>
 	<body>
 		<header>
-		<%= config.siteName %> <div><%- menu %></div>
+		<%= config.siteName %> <nav><%- menu %></nav>
 		</header>
 		<main>
-			
-			<% if(type==='galleryItem'){ %>
-				<%	if(imgNav.hasOwnProperty('previousImg')){ %>
+			<div><b><%= pageName %></b></div>
+			<% if(type==='galleryItem'){
+					if(imgNav.hasOwnProperty('previousImg')){ %>
 						<a href="/gallery/<%= galleryId+'/'+imgNav.previousImg %>">Back</a>
-					<% } %>
-					<% if(imgNav.hasOwnProperty('nextImg')){ %>
+					<% }
+						 if(imgNav.hasOwnProperty('nextImg')){ %>
 						<a href="/gallery/<%= galleryId+'/'+imgNav.nextImg %>">Next</a>
 					<% } %>
 				<div><a href="/full/<%= data.image %>" target="_blank"><img src="/med/<%= data.image %>""></a></div>
 			<% } %>
 			
-			<%= content %>
+			<%- content %>
 			<% if(type==='gallery'){ %>
 				<div>
 				<%

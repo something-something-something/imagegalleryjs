@@ -4,6 +4,7 @@ const app = express();
 const fsPromises = require('fs').promises;
 const path = require('path');
 const galleryFunctions = require('./util/galleryFunctions');
+const pageFunctions = require('./util/pageFunctions');
 
 app.locals.config = {
 	siteName:'Test Gallery',
@@ -11,7 +12,8 @@ app.locals.config = {
 	galleryItemsDir: 'testdata/galleryItems',
 	galleryImageDir: 'testdata/images',
 	galleryImageJsFunctions: './testdata/imgjs/img-mod.js',
-	homePage:'/gallery/test',
+	pagesDir:'testdata/pages',
+	homePage:'/page/home',
 	imageMountPaths:[
 		{
 			prefix:'/thumb',
@@ -31,12 +33,9 @@ app.locals.config = {
 	menuHtml:'testdata/menu.html'
 };
 
-app.locals.menuHtml = {}
-app.locals.galleries = {}
-
-
-
-
+app.locals.menuHtml = {};
+app.locals.galleries = {};
+app.locals.pages={};
 
 async function modifyimages(jsfile, imgdir, imgpath) {
 	let dirconArr = await fsPromises.readdir(path.join(imgdir, imgpath), {
@@ -69,10 +68,12 @@ app.use('/template/public',express.static(path.join(app.locals.config.templateDi
 
 
 const galleryRouter = require('./routes/gallery');
+const pageRouter = require('./routes/page');
 app.get('/', async (req, res) => {
 	res.redirect(302,app.locals.config.homePage);
 });
 app.use('/gallery', galleryRouter);
+app.use('/page', pageRouter);
 for(let i of app.locals.config.imageMountPaths){
 	let options={};
 	if (i.hasOwnProperty('options')){
@@ -87,5 +88,7 @@ for(let i of app.locals.config.imageMountPaths){
 app.listen(3000, async () => {
 	app.locals.galleries = await galleryFunctions.getGalleries(app.locals.config);
 	app.locals.menuHtml=await fsPromises.readFile(app.locals.config.menuHtml);
+
+	app.locals.pages=await pageFunctions(app.locals.config);
 	console.log('TEST');
 })
