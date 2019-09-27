@@ -11,6 +11,7 @@ app.locals.config = {
 	galleryItemsDir: 'testdata/galleryItems',
 	galleryImageDir: 'testdata/images',
 	galleryImageJsFunctions: './testdata/imgjs/img-mod.js',
+	homePage:'/gallery/test',
 	imageMountPaths:[
 		{
 			prefix:'/thumb',
@@ -69,7 +70,7 @@ app.use('/template/public',express.static(path.join(app.locals.config.templateDi
 
 const galleryRouter = require('./routes/gallery');
 app.get('/', async (req, res) => {
-	res.send('HOME');
+	res.redirect(302,app.locals.config.homePage);
 });
 app.use('/gallery', galleryRouter);
 for(let i of app.locals.config.imageMountPaths){
