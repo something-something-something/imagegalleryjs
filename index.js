@@ -9,7 +9,18 @@ app.locals.config = {
 	galleryDescriptionsDir: 'testdata/galleries',
 	galleryItemsDir: 'testdata/galleryItems',
 	galleryImageDir: 'testdata/images',
-	galleryImageJsFunctions: './testdata/imgjs/img-mod.js'
+	galleryImageJsFunctions: './testdata/imgjs/img-mod.js',
+	imageMountPaths:[
+		{
+			prefix:'/thumb',
+			source:'testdata/smallimg',
+			options:{}
+		},
+		{
+			prefix:'/full',
+			source:'testdata/outimg',
+		}
+	]
 };
 
 app.locals.galleries = {}
@@ -46,6 +57,16 @@ app.get('/', async (req, res) => {
 	res.send('HOME');
 });
 app.use('/gallery', galleryRouter);
+for(let i of app.locals.config.imageMountPaths){
+	let options={};
+	if (i.hasOwnProperty('options')){
+		options=i.options;
+	}
+	
+	app.use(i.prefix,express.static(i.source,options));
+}
+
+
 
 app.listen(3000, async () => {
 	app.locals.galleries = await galleryFunctions.getGalleries(app.locals.config);
