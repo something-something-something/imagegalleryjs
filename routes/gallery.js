@@ -6,38 +6,33 @@ const yaml = require('js-yaml');
 	const router = express.Router();
 
 	router.get('/:galleryName', async (req, res, next) => {
-		let config=req.app.locals.config;
-		console.log(config)
-		let gallery = {};
-		try {
-			gallery = yaml.safeLoad(await fsPromises.readFile(config.galleryDescriptionsDir + '/' + req.params.galleryName + '.yaml'));
-			console.log('SUCESS');
+		let galleries=req.app.locals.galleries;
+		if(galleries.hasOwnProperty( req.params.galleryName)){
+			res.send(galleries[ req.params.galleryName]);
 		}
-		catch (e) {
-			console.log('FAILED');
+		else{
 			next();
-			return;
 		}
-
-		res.send(gallery);
+		
 	});
 
 	router.get('/:galleryName/:itemName', async (req, res, next) => {
-		let config=req.app.locals.config;
-
-		console.log(config)
-		let gallery = {};
-		try {
-			gallery = yaml.safeLoad(await fsPromises.readFile(config.galleryItemsDir + '/' + req.params.galleryName + '/'+req.params.itemName +'.yaml'));
-			console.log('SUCESS');
+		let galleries=req.app.locals.galleries;
+		if(galleries.hasOwnProperty( req.params.galleryName)){
+			if(galleries[req.params.galleryName].items.hasOwnProperty(req.params.itemName)){
+				res.send({
+						name:req.params.itemName,
+						item:galleries[req.params.galleryName].items[req.params.itemName],
+						gallery:galleries[req.params.galleryName]
+					});
+			}
+			else{
+				next();
+			}
 		}
-		catch (e) {
-			console.log('FAILED');
+		else{
 			next();
-			return;
 		}
-
-		res.send(gallery);
 	});
 
 
