@@ -2,28 +2,41 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
 		<link rel="stylesheet" href="/template/public/css/css.css">
 		<title>	<%= config.siteName %> &bullet; <%= pageName %></title>
 	</head>
 	<body>
 		<header>
-		<%= config.siteName %> <nav><%- menu %></nav>
+		<a href="/" class="siteName"><%= config.siteName %></a> <nav><%- menu %></nav>
 		</header>
 		<main>
-			<div><b><%= pageName %></b></div>
-			<% if(type==='galleryItem'){
-					if(imgNav.hasOwnProperty('previousImg')){ %>
-						<a href="/gallery/<%= galleryId+'/'+imgNav.previousImg %>">Back</a>
+			
+			<% if(type==='galleryItem'){ %>
+				<div class="galleryItemImageContainer">
+					<% if(imgNav.hasOwnProperty('previousImg')){ %>
+						<a class="imgNavArrowLeft imgNavArrow imgNav" href="/gallery/<%= galleryId+'/'+imgNav.previousImg %>"></a>
 					<% }
-						 if(imgNav.hasOwnProperty('nextImg')){ %>
-						<a href="/gallery/<%= galleryId+'/'+imgNav.nextImg %>">Next</a>
+					else{ %>
+						<span class="imgNav  imgNavArrowNo"></span>
+					<% } 
+					%><a class="galleryItemImageLink" href="/full/<%= data.image %>" target="_blank"><img class="galleryItemImage" src="/med/<%= data.image %>"></a><% 
+					if(imgNav.hasOwnProperty('nextImg')){ %>
+						<a class="imgNav imgNavArrow imgNavArrowRight" href="/gallery/<%= galleryId+'/'+imgNav.nextImg %>"></a>
+					<% } 
+					else { %>
+						<span class="imgNav imgNavArrowNo" ></span>
 					<% } %>
-				<div><a href="/full/<%= data.image %>" target="_blank"><img src="/med/<%= data.image %>""></a></div>
+					
+				</div>
 			<% } %>
 			
-			<%- content %>
+			<div class="content">
+					<div class="pageTitle"><%= pageName %></div>
+				<%- content %>
+			</div>
 			<% if(type==='gallery'){ %>
-				<div>
+				<div class="galleryImagesContainer">
 				<%
 				for(let i of data.order){
 					let obj=data.items[i]
