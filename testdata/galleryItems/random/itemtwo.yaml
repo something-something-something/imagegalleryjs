@@ -1,5 +1,5 @@
 name: two
 priority: 90000000
-image: nested/nested2/testimg.jpg
+image: random/r2.png
 desc: this is a image
   hi
