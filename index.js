@@ -5,8 +5,38 @@ const fsPromises = require('fs').promises;
 const path = require('path');
 const galleryFunctions = require('./util/galleryFunctions');
 const pageFunctions = require('./util/pageFunctions');
+const fs=require('fs');
 
-app.locals.config = {
+
+
+function readArgs(args){
+	let optionsObj={};
+
+	if(args.length>2){
+		for(let i of args){
+			if(i.startsWith('--port=')){
+				optionsObj.port=i.substring(7)//.valueOf();
+			}
+			else if(i.startsWith('--config=')){
+				optionsObj.configFile=i.substring(9);
+			}
+		}
+	}
+	return optionsObj;
+}
+
+app.locals.cliOptions=readArgs(process.argv);
+
+
+console.log(app.locals.cliOptions);
+
+app.locals.config={};
+
+if(app.locals.cliOptions.configFile!==undefined){
+	app.locals.config=JSON.parse(fs.readFileSync(app.locals.cliOptions.configFile));
+}
+
+let defaultConfig = {
 	siteName:'Test Gallery',
 	galleryDescriptionsDir: 'testdata/galleries',
 	galleryItemsDir: 'testdata/galleryItems',
@@ -32,6 +62,13 @@ app.locals.config = {
 	templateDir:'testdata/template',
 	menuHtml:'testdata/menu.html'
 };
+
+for(let i of Object.keys(defaultConfig)){
+	if(!app.locals.config.hasOwnProperty(i)){
+		app.locals.config[i]=defaultConfig[i];
+	}
+}
+
 
 app.locals.menuHtml = {};
 app.locals.galleries = {};
@@ -85,7 +122,7 @@ for(let i of app.locals.config.imageMountPaths){
 
 
 
-app.listen(3000, async () => {
+app.listen(app.locals.cliOptions.port||3000, async () => {
 	app.locals.galleries = await galleryFunctions.getGalleries(app.locals.config);
 	app.locals.menuHtml=await fsPromises.readFile(app.locals.config.menuHtml);
 
