@@ -43,7 +43,7 @@ let defaultConfig = {
 	galleryDescriptionsDir: path.join(__dirname,'testdata/galleries'),
 	galleryItemsDir:  path.join(__dirname,'testdata/galleryItems'),
 	galleryImageDir:  path.join(__dirname,'testdata/images'),
-	galleryImageJsFunctions: './testdata/imgjs/img-mod.js',
+	galleryImageJsFunctions:  path.join(__dirname,'testdata/imgjs/img-mod.js'),
 	pagesDir: path.join(__dirname,'testdata/pages'),
 	homePage:'/page/home',
 	imageMountPaths:[
@@ -88,7 +88,7 @@ async function modifyimages(jsfile, imgdir, imgpath) {
 		else if (i.isFile()) {
 			console.log(path.join(imgpath, i.name));
 			if (path.extname(i.name).toLowerCase() === '.png' || path.extname(i.name).toLowerCase() === '.jpeg' || path.extname(i.name).toLowerCase() === '.jpg') {
-				let imageMod = require(jsfile);
+				let imageMod = require(path.resolve(jsfile));
 				imageMod(imageModFunctions,imgdir, path.join(imgpath, i.name));
 			}
 

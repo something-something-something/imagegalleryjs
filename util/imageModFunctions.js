@@ -3,9 +3,9 @@ const path=require('path');
 
 const fsPromises=require('fs').promises;
 const fs=require('fs');
-
+const nodeCanvas=require('canvas');
 async function createImage(imgdir,imgpath){
-	//let targetdir='testdata/outimg';
+
 	let img=await loadImage(path.join(imgdir,imgpath));
 
 	let imgcanvas=createCanvas(img.width,img.height);
@@ -71,5 +71,6 @@ module.exports={
 	createXwidthImage:createXwidthImage,
 	createXheightImage:createXheightImage,
 	createImage:createImage,
-	writeCanvas:writeCanvas
+	writeCanvas:writeCanvas,
+	nodeCanvas:nodeCanvas
 };
