@@ -4,6 +4,8 @@ const path=require('path');
 const fsPromises=require('fs').promises;
 const fs=require('fs');
 const nodeCanvas=require('canvas');
+const crypto=require('crypto');
+
 async function createImage(imgdir,imgpath){
 
 	let img=await loadImage(path.join(imgdir,imgpath));
@@ -50,27 +52,67 @@ async function writeCanvas(targetdir,imgpath,imgcanvas){
 
 	let imgStream;
 	if(path.extname(imgpath).toLowerCase()==='.jpg'||path.extname(imgpath).toLowerCase()==='.jpeg'){
-		console.log('jpg');
+		//console.log('jpg');
 		imgStream=imgcanvas.createJPEGStream({quality:1});
 	}
 	else if(path.extname(imgpath).toLowerCase()==='.png'){
-		console.log('png');
+		//console.log('png');
 		imgStream=imgcanvas.createPNGStream();
 	}
 	else{
-		console.log('none');
+		//console.log('none');
 		return;
 	}
 	imgStream.pipe(imgwrite);
 	imgwrite.on('finish',()=>{
-		console.log('done')
+		//console.log('done')
 	});
 }
+function buildImageHasChanged(config,hashObj){
 
-module.exports={
-	createXwidthImage:createXwidthImage,
-	createXheightImage:createXheightImage,
-	createImage:createImage,
-	writeCanvas:writeCanvas,
-	nodeCanvas:nodeCanvas
-};
+	let imageHasChanged=async function(imgdir,imgpath){
+		//TODO cleanup
+		if(!hashObj.hasOwnProperty('imgFiles')){
+			return true;
+		}
+		else if(!hashObj.hasOwnProperty('jsFunc')){
+			return true;
+		}
+		else if(!hashObj.imgFiles.hasOwnProperty(imgpath)){
+			return true;
+		}
+		else if(hashObj.imgFiles.hasOwnProperty(imgpath)&&hashObj.hasOwnProperty('jsFunc')){
+			let sha256img=crypto.createHash('sha256');
+			sha256img.update(await fsPromises.readFile(path.join(imgdir,imgpath)))
+			let sha256js=crypto.createHash('sha256');
+			sha256js.update(await fsPromises.readFile(config.galleryImageJsFunctions));
+
+			if(sha256img.digest('hex')===hashObj.imgFiles[imgpath]&&sha256js.digest('hex')===hashObj.jsFunc){
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else{
+			return true
+		}
+
+	}
+	return imageHasChanged;
+}
+
+
+
+function exportBuilder(config,hashObj) {
+	
+	return {
+		imageHasChanged:buildImageHasChanged(config,hashObj),
+		createXwidthImage: createXwidthImage,
+		createXheightImage: createXheightImage,
+		createImage: createImage,
+		writeCanvas: writeCanvas,
+		nodeCanvas: nodeCanvas
+	};
+}
+module.exports=exportBuilder;
