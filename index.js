@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict';
 const express = require('express');
 const app = express();
@@ -35,14 +36,14 @@ app.locals.config={};
 if(app.locals.cliOptions.configFile!==undefined){
 	app.locals.config=JSON.parse(fs.readFileSync(app.locals.cliOptions.configFile));
 }
-
+console.log("__dirname"+__dirname);
 let defaultConfig = {
 	siteName:'Test Gallery',
-	galleryDescriptionsDir: 'testdata/galleries',
-	galleryItemsDir: 'testdata/galleryItems',
-	galleryImageDir: 'testdata/images',
+	galleryDescriptionsDir: path.join(__dirname,'testdata/galleries'),
+	galleryItemsDir:  path.join(__dirname,'testdata/galleryItems'),
+	galleryImageDir:  path.join(__dirname,'testdata/images'),
 	galleryImageJsFunctions: './testdata/imgjs/img-mod.js',
-	pagesDir:'testdata/pages',
+	pagesDir: path.join(__dirname,'testdata/pages'),
 	homePage:'/page/home',
 	imageMountPaths:[
 		{
@@ -59,8 +60,8 @@ let defaultConfig = {
 			source:'testdata/outimg',
 		}
 	],
-	templateDir:'testdata/template',
-	menuHtml:'testdata/menu.html'
+	templateDir: path.join(__dirname,'testdata/template'),
+	menuHtml: path.join(__dirname,'testdata/menu.html')
 };
 
 for(let i of Object.keys(defaultConfig)){
