@@ -7,6 +7,7 @@ const path = require('path');
 const galleryFunctions = require('./util/galleryFunctions');
 const pageFunctions = require('./util/pageFunctions');
 const fs=require('fs');
+const imageModFunctions=require('./util/imageModFunctions');
 
 
 
@@ -88,7 +89,7 @@ async function modifyimages(jsfile, imgdir, imgpath) {
 			console.log(path.join(imgpath, i.name));
 			if (path.extname(i.name).toLowerCase() === '.png' || path.extname(i.name).toLowerCase() === '.jpeg' || path.extname(i.name).toLowerCase() === '.jpg') {
 				let imageMod = require(jsfile);
-				imageMod(imgdir, path.join(imgpath, i.name));
+				imageMod(imageModFunctions,imgdir, path.join(imgpath, i.name));
 			}
 
 
