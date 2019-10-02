@@ -20,7 +20,7 @@
 					else{ %>
 						<span class="imgNav  imgNavArrowNo"></span>
 					<% } 
-					%><a class="galleryItemImageLink" href="/full/<%= data.image %>" target="_blank"><img class="galleryItemImage" src="/med/<%= data.image %>"></a><% 
+					%><img class="galleryItemImage" src="/med/<%= data.image %>"><% 
 					if(imgNav.hasOwnProperty('nextImg')){ %>
 						<a class="imgNav imgNavArrow imgNavArrowRight" href="/gallery/<%= galleryId+'/'+imgNav.nextImg %>"></a>
 					<% } 
@@ -33,6 +33,9 @@
 			
 			<div class="content">
 					<div class="pageTitle"><%= pageName %></div>
+					<% if(type==='galleryItem'){ %>
+						<div class="linkToFullImg"><a  href="/full/<%= data.image %>" target="_blank">Full Image</a></div>
+					<% } %>
 				<%- content %>
 			</div>
 			<% if(type==='gallery'){ %>

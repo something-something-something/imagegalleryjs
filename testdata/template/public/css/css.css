@@ -127,25 +127,23 @@ main .galleryItemImageContainer .imgNavArrow:hover{
 	background-color:rgb(55, 170, 122); 
 }
 
-main .galleryItemImageContainer a.galleryItemImageLink{
-	/* margin:0 10% 0 10%; */
+/* main .galleryItemImageContainer a.galleryItemImageLink{
+	margin:0 10% 0 10%;
 	padding: 0;
 	margin: 0;
 	display: flex;
 	width:50%;
 
-}
+} */
 main .galleryItemImageContainer img.galleryItemImage{
 	/* margin:0 10% 0 10%; */
 	padding: 0;
 	margin: 0;
-	width:100%;
+	width:50%;
 	transition: 1s box-shadow;
 	
 }
-main .galleryItemImageContainer img.galleryItemImage:hover{
-	box-shadow: 0 0 3em rgb(0, 0, 0);
-}
+
 
 main .content{
 	max-width:40em;
@@ -163,6 +161,12 @@ main .content .pageTitle{
 	text-align: center;
 	margin:0 0 0.5em 0;
 	font-size: 1.5em;
+}
+main .content .linkToFullImg{
+	text-align: center;
+	
+	margin:0 0 0.5em 0;
+	font-size: 1em;
 }
 
 
