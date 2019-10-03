@@ -20,7 +20,18 @@
 					else{ %>
 						<span class="imgNav  imgNavArrowNo"></span>
 					<% } 
-					%><img class="galleryItemImage" src="/med/<%= data.image %>"><% 
+					%>
+					<% 
+						if(imgNav.hasOwnProperty('nextImg')){
+					%>
+							<a class="galleryItemImageLinkNext"  href="/gallery/<%= galleryId+'/'+imgNav.nextImg %>">
+					<%	}
+						else{
+					%>
+							<a class="galleryItemImageLinkNext" href="/gallery/<%= galleryId+'/'+gallery.order[0] %>">
+					<%	}
+					%>
+					<img class="galleryItemImage" src="/med/<%= data.image %>"></a><% 
 					if(imgNav.hasOwnProperty('nextImg')){ %>
 						<a class="imgNav imgNavArrow imgNavArrowRight" href="/gallery/<%= galleryId+'/'+imgNav.nextImg %>"></a>
 					<% } 
