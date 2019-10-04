@@ -18,8 +18,8 @@ function readArgs(args){
 			if(i.startsWith('--port=')){
 				optionsObj.port=i.substring(7);//.valueOf();
 			}
-			else if(i.startsWith('--hostname=')){
-				optionsObj.host=i.substring(11);
+			else if(i.startsWith('--host=')){
+				optionsObj.host=i.substring(7);
 			}
 			else if(i.startsWith('--config=')){
 				optionsObj.configFile=i.substring(9);
