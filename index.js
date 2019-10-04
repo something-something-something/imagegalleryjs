@@ -14,7 +14,8 @@ function readArgs(args){
 	let optionsObj={};
 
 	if(args.length>2){
-		for(let i of args){
+		let realArgs=args.slice(2);
+		for(let i of realArgs){
 			if(i.startsWith('--port=')){
 				optionsObj.port=i.substring(7);//.valueOf();
 			}
@@ -23,6 +24,51 @@ function readArgs(args){
 			}
 			else if(i.startsWith('--config=')){
 				optionsObj.configFile=i.substring(9);
+			}
+			else if(i.startsWith('--rm-old-images=')){
+				let op=i.substring(16)
+				if(op==='yes'||op==='dry'){
+					optionsObj.rmOldImages=i.substring(16);
+				}
+				else{
+					console.log('--rm-old-images= must be yes or dry see --help');
+					process.exit();
+				}
+			}
+			else if(i=='--help'){
+				let helpArr=[
+					{
+						arg:'--port=PORTNUM',
+						text:'where PORTNUM is the port to listen on'
+					},
+					{
+						arg:'--host=HOST',
+						text:'HOST is host (like localhost 127.0.0.1 etc)'
+					},
+					{
+						arg:'--config=CONFIGFILE',
+						text:'where CONFIGFILE is the configuration file'
+					},
+					{
+						arg:'--rm-old-images=RMOPTION',
+						text:'RMOPTION can be \x1b[38;2;255;50;50m\x1b[48;2;55;55;55myes\x1b[0m or \x1b[38;2;50;250;50m\x1b[48;2;55;55;55mdry\x1b[0m  \n\t\tyes means actualy delete the files dry just outputs like files were deleted (dry run)'
+					},
+					{
+						arg:'--help',
+						text:'this help text'
+					}
+					
+				]
+				//console.log(helpText);
+				console.log('\n\x1b[1mArguments\x1b[0m\n')
+				for(let x of helpArr){
+					console.log('\t\x1b[1m\x1b[38;2;0;220;100m\x1b[48;2;55;55;55m '+x.arg+' \x1b[0m '+x.text+'\n');
+				}
+				process.exit();
+			}
+			else{
+				console.log('\x1b[1m\x1b[38;2;255;20;0m\x1b[48;2;0;0;20m '+i+'\x1b[0m IS NOT RECOGNIZED');
+				process.exit();
 			}
 		}
 	}
@@ -47,6 +93,11 @@ let defaultConfig = {
 	galleryImageDir:  path.join(__dirname,'testdata/images'),
 	galleryImageJsFunctions:  path.join(__dirname,'testdata/imgjs/img-mod.js'),
 	galleryImagesHashFile:"testdata/generated/hash/hashes.json",
+	imageDirsToClean:[
+		'testdata/generated/smallimg',
+		'testdata/generated/medimg',
+		'testdata/generated/outimg'
+	],
 	pagesDir: path.join(__dirname,'testdata/pages'),
 	homePage:'/page/home',
 	imageMountPaths:[

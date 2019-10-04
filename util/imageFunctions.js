@@ -97,6 +97,51 @@ async function doImages(app){
 		);
 
 	makeJsonHashFile(app,nestedPromiseImgArrays);
+	cleanImgDirs(app,await getImageList(nestedPromiseImgArrays));
+}
+async function cleanImgDirs(app,wandtedFiles){
+	if(app.locals.cliOptions.hasOwnProperty('rmOldImages')){
+		let actualRm=app.locals.cliOptions.rmOldImages==='yes';
+		for(let i of app.locals.config.imageDirsToClean){
+			console.log('cleaning '+i)
+			cleanDirRec(wandtedFiles,i,'',actualRm);
+		}
+	}
+	else{
+		console.log('run with --rm-old-images=yes to remove images that are no longer relavent or --rm-old-images=dry to see test result');
+	}
+}
+async function cleanDirRec(wandtedFiles,targetDir,currPath,actualRm){
+	let dirCon=[];
+	try{
+		dirCon=await fsPromises.readdir(path.join(targetDir,currPath),{
+			withFileTypes: true
+		});
+	}
+	catch(e){
+		console.log(e);
+		console.log(targetDir+' Does not exist not deleting files');
+	}
+	
+	for(let i of dirCon){
+		if(i.isDirectory()){
+			cleanDirRec(wandtedFiles,targetDir,path.join(currPath,i.name),actualRm);
+		}
+		else if(i.isFile()){
+			if(wandtedFiles.indexOf(path.join(currPath,i.name))>-1){
+				//console.log(path.join(currPath,i.name)+ ' Okay no deletion');
+			}
+			else{
+				let fileToDelete=path.join(targetDir,currPath,i.name);
+				console.log(' DELETED! '+fileToDelete);
+				if(actualRm){
+					console.log('actualRm')
+					fsPromises.unlink(fileToDelete);
+				}
+				
+			}
+		}
+	}
 }
 
 module.exports={
@@ -104,5 +149,6 @@ module.exports={
 	getImageList:getImageList,
 	getHashObj:getHashObj,
 	modifyimages:modifyimages,
-	doImages:doImages
+	doImages:doImages,
+	cleanImgDirs:cleanImgDirs
 }
