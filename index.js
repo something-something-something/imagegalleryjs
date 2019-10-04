@@ -16,7 +16,10 @@ function readArgs(args){
 	if(args.length>2){
 		for(let i of args){
 			if(i.startsWith('--port=')){
-				optionsObj.port=i.substring(7)//.valueOf();
+				optionsObj.port=i.substring(7);//.valueOf();
+			}
+			else if(i.startsWith('--hostname=')){
+				optionsObj.host=i.substring(11);
 			}
 			else if(i.startsWith('--config=')){
 				optionsObj.configFile=i.substring(9);
@@ -184,7 +187,7 @@ for(let i of app.locals.config.imageMountPaths){
 
 
 
-app.listen(app.locals.cliOptions.port||3000, async () => {
+app.listen(app.locals.cliOptions.port||3000, app.locals.cliOptions.host||'127.0.0.1',async () => {
 	app.locals.galleries = await galleryFunctions.getGalleries(app.locals.config);
 	app.locals.menuHtml=await fsPromises.readFile(app.locals.config.menuHtml);
 	app.locals.pages=await pageFunctions(app.locals.config);
