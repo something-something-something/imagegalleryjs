@@ -6,9 +6,9 @@ const fsPromises = require('fs').promises;
 const path = require('path');
 const galleryFunctions = require('./util/galleryFunctions');
 const pageFunctions = require('./util/pageFunctions');
+const imageFunctions=require('./util/imageFunctions');
 const fs=require('fs');
-const imageModFunctions=require('./util/imageModFunctions');
-const crypto=require('crypto');
+
 
 function readArgs(args){
 	let optionsObj={};
@@ -78,91 +78,8 @@ for(let i of Object.keys(defaultConfig)){
 app.locals.menuHtml = {};
 app.locals.galleries = {};
 app.locals.pages={};
-//TDO cleanup and move image stuff
-async function getHashObj(hashFile){
-	try{
-		let hashFileObj=JSON.parse(await fsPromises.readFile(hashFile,{
-			encoding:'utf-8'
-		}));
-		return hashFileObj;
-	}
-	catch(e){
 
-		console.log('missing or invalid hash file creating fallback dummy');
-		return {
-
-		}
-	}
-	
-}
-
-async function modifyimages(hashObjPromise,jsfile, imgdir, imgpath) {
-	let hashObj=await hashObjPromise;
-	let dirconArr = await fsPromises.readdir(path.join(imgdir, imgpath), {
-		withFileTypes: true
-	});
-	let arrOfImages=[];
-	for (let i of dirconArr) {
-		if (i.isDirectory()) {
-			arrOfImages.push(modifyimages(hashObj,jsfile, imgdir, path.join(imgpath, i.name)));
-		}
-		else if (i.isFile()) {
-			arrOfImages.push(path.join(imgpath, i.name));
-			console.log(path.join(imgpath, i.name));
-			if (path.extname(i.name).toLowerCase() === '.png' || path.extname(i.name).toLowerCase() === '.jpeg' || path.extname(i.name).toLowerCase() === '.jpg') {
-				let imageMod = require(path.resolve(jsfile));
-				imageMod(imageModFunctions(app.locals.config,hashObj),imgdir, path.join(imgpath, i.name));
-			}
-		}
-	}
-	return arrOfImages
-}
-
-let nestedPromiseImgArrays = modifyimages(getHashObj(app.locals.config.galleryImagesHashFile),app.locals.config.galleryImageJsFunctions, app.locals.config.galleryImageDir, '');
-async function getImageList(nestedImageArrays) {
-	let img = await nestedImageArrays;
-	let arr=[];
-	for(let i of img){
-		let z= await i;
-		if(Array.isArray(z)){
-			arr.push(...await getImageList(z));
-		}
-		else{
-			arr.push(z);
-		}
-	}
-	
-	return arr;
-}
-async function makeJsonHashFile(npia){
-	let images=await getImageList(npia);
-	//console.log(images);
-	let obj={
-		imgFiles:{},
-
-	}
-	{
-		let sha256=crypto.createHash('sha256');
-		sha256.update(await fs.promises.readFile(app.locals.config.galleryImageJsFunctions));
-		obj.jsFunc=sha256.digest('hex');
-	}
-	for( let i of images){
-		let imgPath=path.join(app.locals.config.galleryImageDir,i);
-		
-		let sha256=crypto.createHash('sha256');
-		sha256.update(await fs.promises.readFile(imgPath));
-
-		obj.imgFiles[i]=sha256.digest('hex');
-	}
-	//console.log(obj);
-	await fsPromises.mkdir(path.dirname(app.locals.config.galleryImagesHashFile),{
-		recursive:true
-	});
-	fsPromises.writeFile(app.locals.config.galleryImagesHashFile,JSON.stringify(obj));
-};
-makeJsonHashFile(nestedPromiseImgArrays);
-
-
+imageFunctions.doImages(app);
 
 app.set('views',path.join(app.locals.config.templateDir,'views'));
 app.set('view engine','ejs');
