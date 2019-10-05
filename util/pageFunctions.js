@@ -8,7 +8,7 @@ async function getPages(config){
 	let pageDirEntries=await fsPromises.readdir(config.pagesDir,{withFileTypes:true});
 	for (i of pageDirEntries){
 		if(i.isFile()&& path.extname(i.name)==='.yaml'){
-			pages[path.basename(i.name,'.yaml')]=yaml.safeLoad(await fsPromises.readFile(config.pagesDir + '/'+ i.name));
+			pages[path.basename(i.name,'.yaml')]=yaml.safeLoad(await fsPromises.readFile(path.join(config.pagesDir ,i.name)));
 		}
 	}
 	return pages;

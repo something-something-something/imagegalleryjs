@@ -3,7 +3,6 @@ const yaml = require('js-yaml');
 const path = require('path');
 
 
-//use path.join 
 async function getGalleries(config){
 
 	let galleries={};
@@ -20,7 +19,7 @@ async function getGalleries(config){
 async function getGallery(config,gName){
 	let gallery={};
 	
-	gallery = yaml.safeLoad(await fsPromises.readFile(config.galleryDescriptionsDir + '/' + gName + '.yaml'));
+	gallery = yaml.safeLoad(await fsPromises.readFile(path.join(config.galleryDescriptionsDir, gName + '.yaml')));
 	gallery.items= await getGalleryItems(config,gName);
 	gallery.order=orderItems(gallery);
 	return gallery;
@@ -32,14 +31,14 @@ async function getGalleryItems(config,gName){
 	galleryItems={};
 	let galleryItemDirEntries=[];
 	try{
-		galleryItemDirEntries=await fsPromises.readdir(config.galleryItemsDir + '/' + gName,{withFileTypes:true});
+		galleryItemDirEntries=await fsPromises.readdir(path.join(config.galleryItemsDir, gName),{withFileTypes:true});
 	}
 	catch(e){
-
+		console.log(e);
 	}
 	for (i of galleryItemDirEntries){
 		if(i.isFile()&& path.extname(i.name)==='.yaml'){
-			galleryItems[path.basename(i.name,'.yaml')]= yaml.safeLoad(await fsPromises.readFile(config.galleryItemsDir + '/' + gName + '/'+i.name));
+			galleryItems[path.basename(i.name,'.yaml')]= yaml.safeLoad(await fsPromises.readFile(path.join(config.galleryItemsDir , gName ,i.name)));
 		}
 	}
 

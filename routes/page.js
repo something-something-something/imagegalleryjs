@@ -18,10 +18,6 @@ const yaml = require('js-yaml');
 				menu:req.app.locals.menuHtml
 			};
 			res.render('index',sendObj);
-
-
-			
-			//res.send();
 		}
 		else{
 			next();

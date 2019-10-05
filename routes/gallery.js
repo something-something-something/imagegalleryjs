@@ -1,7 +1,4 @@
 const express = require('express');
-const fsPromises = require('fs').promises;
-const yaml = require('js-yaml');
-
 
 	const router = express.Router();
 
@@ -22,9 +19,6 @@ const yaml = require('js-yaml');
 			};
 			res.render('index',sendObj);
 
-
-			
-			//res.send();
 		}
 		else{
 			next();

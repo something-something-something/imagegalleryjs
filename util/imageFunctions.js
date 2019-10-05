@@ -135,7 +135,6 @@ async function cleanDirRec(wandtedFiles,targetDir,currPath,actualRm){
 				let fileToDelete=path.join(targetDir,currPath,i.name);
 				console.log(' DELETED! '+fileToDelete);
 				if(actualRm){
-					console.log('actualRm')
 					fsPromises.unlink(fileToDelete);
 				}
 				
