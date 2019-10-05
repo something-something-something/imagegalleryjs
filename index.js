@@ -158,6 +158,16 @@ const pageRouter = require('./routes/page');
 app.get('/', async (req, res) => {
 	res.redirect(302,app.locals.config.homePage);
 });
+
+function writeLog(req,res,next){
+	let time=new Date();
+	console.log(time.toLocaleString()+' '+req.originalUrl);
+	next();
+}
+
+
+app.use(writeLog);
+
 app.use('/gallery', galleryRouter);
 app.use('/page', pageRouter);
 for(let i of app.locals.config.imageMountPaths){
