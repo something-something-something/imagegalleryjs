@@ -38,20 +38,22 @@ function readArgs(args){
 			else if(i=='--help'){
 				let helpArr=[
 					{
-						arg:'--port=PORTNUM',
-						text:'where PORTNUM is the port to listen on'
+						arg:'--port=<PORTNUM>',
+						text:'where <PORTNUM> is the port to listen on'
 					},
 					{
-						arg:'--host=HOST',
-						text:'HOST is host (like localhost 127.0.0.1 etc)'
+						arg:'--host=<HOST>',
+						text:'<HOST> is host (like localhost 127.0.0.1 etc)'
 					},
 					{
-						arg:'--config=CONFIGFILE',
+						arg:'--config=<CONFIGFILE>',
 						text:'where CONFIGFILE is the configuration file'
 					},
 					{
-						arg:'--rm-old-images=RMOPTION',
-						text:'RMOPTION can be \x1b[38;2;255;50;50m\x1b[48;2;55;55;55myes\x1b[0m or \x1b[38;2;50;250;50m\x1b[48;2;55;55;55mdry\x1b[0m  \n\t\tyes means actualy delete the files dry just outputs like files were deleted (dry run)'
+						arg:'--rm-old-images=<RMOPTION>',
+						text:['<RMOPTION> can be \x1b[38;2;255;50;50m\x1b[48;2;55;55;55myes\x1b[0m or \x1b[38;2;50;250;50m\x1b[48;2;55;55;55mdry\x1b[0m',
+						'  \x1b[38;2;255;50;50m\x1b[48;2;55;55;55myes\x1b[0m means actualy delete the files',
+						'  \x1b[38;2;50;250;50m\x1b[48;2;55;55;55mdry\x1b[0m just outputs like files were deleted (dry run)']
 					},
 					{
 						arg:'--help',
@@ -61,12 +63,26 @@ function readArgs(args){
 				]
 				//console.log(helpText);
 				console.log('\n\x1b[1mArguments\x1b[0m\n')
+				console.group();
 				for(let x of helpArr){
-					console.log('\t\x1b[1m\x1b[38;2;0;220;100m\x1b[48;2;55;55;55m '+x.arg+' \x1b[0m '+x.text+'\n');
+					console.log('\x1b[1m\x1b[38;2;0;220;100m\x1b[48;2;55;55;55m '+x.arg+' \x1b[0m');
+					console.group();
+					if(Array.isArray(x.text)){
+						for(let y of x.text){
+							console.log(y);
+						}
+					}
+					else{
+						console.log(x.text);
+					}
+					console.groupEnd();
+					console.log();
+					
 				}
 				process.exit();
 			}
 			else{
+				
 				console.log('\x1b[1m\x1b[38;2;255;20;0m\x1b[48;2;0;0;20m '+i+'\x1b[0m IS NOT RECOGNIZED');
 				process.exit();
 			}
