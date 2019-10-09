@@ -48,25 +48,28 @@ async function writeCanvas(targetdir,imgpath,imgcanvas){
 	await fsPromises.mkdir(path.join(targetdir,path.dirname(imgpath)),{
 		recursive:true
 	});
-	let imgwrite=fs.createWriteStream(path.join(targetdir,imgpath));
-
-	let imgStream;
+	//let imgwrite=fs.createWriteStream(path.join(targetdir,imgpath));
+	let imgBuff;
+	//let imgStream;
 	if(path.extname(imgpath).toLowerCase()==='.jpg'||path.extname(imgpath).toLowerCase()==='.jpeg'){
 		//console.log('jpg');
-		imgStream=imgcanvas.createJPEGStream({quality:1});
+		//imgStream=imgcanvas.createJPEGStream({quality:1});
+		imgBuff=imgcanvas.toBuffer('image/jpeg',{quality:1})
 	}
 	else if(path.extname(imgpath).toLowerCase()==='.png'){
 		//console.log('png');
-		imgStream=imgcanvas.createPNGStream();
+		//imgStream=imgcanvas.createPNGStream();
+		imgBuff=imgcanvas.toBuffer('image/png')
 	}
 	else{
 		//console.log('none');
 		return;
 	}
-	imgStream.pipe(imgwrite);
-	imgwrite.on('finish',()=>{
+	await fsPromises.writeFile(path.join(targetdir,imgpath),imgBuff);
+	//imgStream.pipe(imgwrite);
+	//imgwrite.on('finish',()=>{
 		//console.log('done')
-	});
+	//});
 }
 function buildImageHasChanged(config,hashObj){
 
