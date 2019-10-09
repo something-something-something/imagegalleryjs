@@ -37,7 +37,7 @@ async function modifyimages(app,hashObjPromise,jsfile, imgdir, imgpath) {
 			console.log(path.join(imgpath, i.name));
 			if (path.extname(i.name).toLowerCase() === '.png' || path.extname(i.name).toLowerCase() === '.jpeg' || path.extname(i.name).toLowerCase() === '.jpg') {
 				let imageMod = require(path.resolve(jsfile));
-				await imageMod(imageModFunctions(app.locals.config,hashObj),imgdir, path.join(imgpath, i.name));
+				imageMod(imageModFunctions(app.locals.config,hashObj),imgdir, path.join(imgpath, i.name));
 			}
 		}
 	}
