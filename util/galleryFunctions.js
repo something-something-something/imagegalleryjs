@@ -52,7 +52,12 @@ function orderItems(gallery){
 	let order=Object.keys(gallery.items).sort((a,b)=>{
 		if(gallery.items[a].hasOwnProperty('priority')){
 			if(gallery.items[b].hasOwnProperty('priority')){
-				return gallery.items[b].priority-gallery.items[a].priority
+				if(gallery.items[b].priority-gallery.items[a].priority===0){
+					return a.localeCompare(b,'en');
+				}
+				else{
+					return gallery.items[b].priority-gallery.items[a].priority
+				}
 			}
 			else{
 				return -1;
@@ -62,15 +67,7 @@ function orderItems(gallery){
 			return 1;
 		}
 		else{
-			if(a < b){
-				return -1
-			}
-			else if(b < a){
-				return 1;
-			}
-			else{
-				return 0;
-			}
+			return a.localeCompare(b,'en');
 		}
 
 	});
