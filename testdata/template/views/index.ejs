@@ -12,7 +12,9 @@
 		</header>
 		<main>
 			
-			<% if(type==='galleryItem'){ %>
+			<% if(type==='galleryItem'){ 
+					let nextItemUrl='';	
+			%>
 				<div class="galleryItemImageContainer">
 					<% if(imgNav.hasOwnProperty('previousImg')){ %>
 						<a class="imgNavArrowLeft imgNavArrow imgNav" href="/gallery/<%= galleryId+'/'+imgNav.previousImg %>"></a>
@@ -23,15 +25,27 @@
 					%>
 					<% 
 						if(imgNav.hasOwnProperty('nextImg')){
-					%>
-							<a class="galleryItemImageLinkNext"  href="/gallery/<%= galleryId+'/'+imgNav.nextImg %>">
-					<%	}
+							nextItemUrl='/gallery/'+ galleryId+'/'+imgNav.nextImg;
+						}
 						else{
+							nextItemUrl='/gallery/'+ galleryId+'/'+gallery.order[0];
+						}
 					%>
-							<a class="galleryItemImageLinkNext" href="/gallery/<%= galleryId+'/'+gallery.order[0] %>">
-					<%	}
+					<%
+					if(Array.isArray(data.image)) {
+						%><div class="galleryItemImageCol"><%
+						for(let i of data.image){ %>
+							<a class="galleryItemImageLinkNext"  href="<%= nextItemUrl %>"><img class="galleryItemImage" src="/med/<%= i %>">
+					<%
+						} 
+						%></div><%
+					} 
+					else{ %>
+						<a class="galleryItemImageLinkNext"  href="/gallery/<%= galleryId+'/'+imgNav.nextImg %>"><img class="galleryItemImage" src="/med/<%= data.image %>"></a>
+					<% 
+					} 
 					%>
-					<img class="galleryItemImage" src="/med/<%= data.image %>"></a><% 
+					<% 
 					if(imgNav.hasOwnProperty('nextImg')){ %>
 						<a class="imgNav imgNavArrow imgNavArrowRight" href="/gallery/<%= galleryId+'/'+imgNav.nextImg %>"></a>
 					<% } 
@@ -44,9 +58,17 @@
 			
 			<div class="content">
 					<div class="pageTitle"><%= pageName %></div>
-					<% if(type==='galleryItem'){ %>
-						<div class="linkToFullImg"><a  href="/full/<%= data.image %>" target="_blank">Full Image</a></div>
-					<% } %>
+					<% 
+					if(type==='galleryItem'){ 
+						if(Array.isArray(data.image)){
+							for(let fi of data.image){
+								%><div class="linkToFullImg"><a  href="/full/<%= fi %>" target="_blank">Full Image</a></div><%
+							}
+						}
+						else{
+							%><div class="linkToFullImg"><a  href="/full/<%= data.image %>" target="_blank">Full Image</a></div><%
+						}
+					 } %>
 				<%- content %>
 			</div>
 			<% if(type==='gallery'){ %>
@@ -54,9 +76,14 @@
 				<%
 				for(let i of data.order){
 					let obj=data.items[i]
+					if(Array.isArray(obj.image)){
 				%>
-					<a href="/gallery/<%= galleryId +'/'+i %>"><img class="galleryImages" src="/thumb/<%= obj.image %>"></a>
-				<% } %>
+						<a href="/gallery/<%= galleryId +'/'+i %>"><img class="galleryImages" src="/thumb/<%= obj.image[0] %>"></a>
+					<% }
+					else{ %>
+						<a href="/gallery/<%= galleryId +'/'+i %>"><img class="galleryImages" src="/thumb/<%= obj.image %>"></a>
+				<% 	}
+				} %>
 				</div>
 			<% } %>
 
