@@ -1,11 +1,11 @@
-const {loadImage,createCanvas}=require('canvas');
+//const {loadImage,createCanvas}=require('canvas');
 const path=require('path');
 
 const fsPromises=require('fs').promises;
 const fs=require('fs');
-const nodeCanvas=require('canvas');
+//const nodeCanvas=require('canvas');
 const crypto=require('crypto');
-
+/*
 async function createImage(imgdir,imgpath){
 
 	let img=await loadImage(path.join(imgdir,imgpath));
@@ -68,6 +68,16 @@ async function writeCanvas(targetdir,imgpath,imgcanvas){
 		//console.log('done')
 	});
 }
+*/
+
+
+//function()
+
+ async function createDirs(theFilepath){
+	await fsPromises.mkdir(path.dirname(theFilepath),{recursive:true});
+	return theFilepath
+}
+
 function buildImageHasChanged(config,hashObj){
 
 	let imageHasChanged=async function(imgdir,imgpath){
@@ -108,11 +118,12 @@ function exportBuilder(config,hashObj) {
 	
 	return {
 		imageHasChanged:buildImageHasChanged(config,hashObj),
-		createXwidthImage: createXwidthImage,
-		createXheightImage: createXheightImage,
-		createImage: createImage,
-		writeCanvas: writeCanvas,
-		nodeCanvas: nodeCanvas
+		createDirs:createDirs
+		//createXwidthImage: createXwidthImage,
+		//createXheightImage: createXheightImage,
+		//createImage: createImage,
+		//writeCanvas: writeCanvas,
+		//nodeCanvas: nodeCanvas
 	};
 }
 module.exports=exportBuilder;
