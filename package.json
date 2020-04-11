@@ -14,7 +14,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "canvas": "^2.6.1",
-    "ejs": "^3.0.1",
+    "ejs": "^3.0.2",
     "express": "^4.17.1",
     "js-yaml": "^3.13.1"
   }
